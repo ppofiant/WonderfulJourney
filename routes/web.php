@@ -13,6 +13,32 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'CategoryController@index');
+
+Auth::routes();
+
+Route::get('/successlogin', function(){
+   return view('layouts.successlogin'); 
 });
+
+Route::get('/home', 'HomeController@index');
+Route::get('/profile', 'UserController@index')->middleware('auth');
+Route::patch('/profile/{userid}', 'UserController@edit')->middleware('auth');
+
+Route::get('/aboutus', function() {
+   return view('aboutus');
+});
+
+Route::get('/users', 'AdminController@index')->middleware('isAdmin');
+
+Route::get('/blog', 'ArticleController@getBlog')->middleware('isUser');
+Route::get('/blog/add', 'ArticleController@index')->middleware('isUser');
+Route::post('/blog/add', 'ArticleController@store')->middleware('isUser');
+
+Route::get('/articles/categories={category}', 'CategoryController@show');
+
+Route::get('/articles/delete/id={articleId}', 'ArticleController@destroys')->middleware('auth');
+Route::get('/articles/id={articleId}', 'ArticleController@show');
+Route::get('/articles/remove/id={articleId}', 'ArticleController@destroy')->middleware('isUser');
+
+Route::get('/delete/id={userid}', 'UserController@destroy')->middleware('isAdmin');
